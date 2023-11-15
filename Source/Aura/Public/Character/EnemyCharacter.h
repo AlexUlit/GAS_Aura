@@ -13,9 +13,13 @@ class AURA_API AEnemyCharacter : public AAuraCharacterBase, public IEnemyInterfa
 	GENERATED_BODY()
 
 public:
+	AEnemyCharacter();
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
-	
-	UPROPERTY(BlueprintReadOnly)
-	bool bHighlited = false;
+
+protected:
+	virtual void BeginPlay() override;
+
+private:
+	void ChangeCustomDepthState(bool bState, USkeletalMeshComponent* TargetMesh);
 };
