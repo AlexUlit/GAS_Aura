@@ -31,4 +31,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> Sphere;
 
+	UPROPERTY(EditAnywhere)
+	bool bAffectHealth;
+
 };
