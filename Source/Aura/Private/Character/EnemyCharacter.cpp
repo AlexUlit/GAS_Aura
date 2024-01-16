@@ -33,7 +33,14 @@ void AEnemyCharacter::UnHighlightActor()
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	InitAbilityActorInfo();
+}
+
+void AEnemyCharacter::InitAbilityActorInfo()
+{
+	Super::InitAbilityActorInfo();
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent.Get())->AbilityActorInfoSet();
 }
 
 void AEnemyCharacter::ChangeCustomDepthState(bool bState, USkeletalMeshComponent* TargetMesh)
