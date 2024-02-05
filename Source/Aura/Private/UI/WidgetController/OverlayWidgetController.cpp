@@ -45,8 +45,9 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	});
 
 	
-	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AssetTags.AddLambda([this](const FGameplayTagContainer& Tags)
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda([this](const FGameplayTagContainer& Tags)
 	{
+		// We got effect tags and now check if it one of "Message" tag, we need to send broadcast with value from out DT
 		for (const FGameplayTag& Tag : Tags)
 		{
 			const FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag("Message");

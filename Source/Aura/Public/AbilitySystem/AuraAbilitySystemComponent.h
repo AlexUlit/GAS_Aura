@@ -14,10 +14,12 @@ class AURA_API UAuraAbilitySystemComponent : public UAbilitySystemComponent
 	GENERATED_BODY()
 
 public:
+	// This functions calls when ASC is set 
 	void AbilityActorInfoSet();
 
-	FEffectAssetTags AssetTags;
+	FEffectAssetTags EffectAssetTags;
 	
 protected:
+	//Uses for OnGameplayEffectAppliedDelegateToSelf delegate 
 	void EffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle);
 };

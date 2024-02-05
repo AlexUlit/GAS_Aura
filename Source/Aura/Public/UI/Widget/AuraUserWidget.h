@@ -15,6 +15,7 @@ class AURA_API UAuraUserWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	//Set WidgetController ref and give callback that WC is set 
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetController(UObject* InWidgetController);
 
@@ -22,6 +23,7 @@ public:
 	TObjectPtr<UObject> WidgetController;
 	
 protected:
+	//Gives BP to know that WC is set
 	UFUNCTION(BlueprintImplementableEvent)
 	void WidgetControllerSet();
 };

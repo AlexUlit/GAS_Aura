@@ -11,7 +11,11 @@ void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 
 void UAuraAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle)
 {
-	FGameplayTagContainer Tags;
-	EffectSpec.GetAllAssetTags(Tags);
-	AssetTags.Broadcast(Tags);
+	FGameplayTagContainer EffectTags;
+	
+	// put all effects tags to "EffectTags"
+	EffectSpec.GetAllAssetTags(EffectTags);
+	
+	//Send these tags for subscribers(OverlayWidgetController)
+	EffectAssetTags.Broadcast(EffectTags);
 }
