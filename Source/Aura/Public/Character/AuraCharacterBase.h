@@ -30,7 +30,7 @@ protected:
 	virtual void InitAbilityActorInfo();
 
 	void ApplyGEtoSelf(const TSubclassOf<UGameplayEffect> GameplayEffect) const;
-	void InitializeDefaultAttributes() const;
+	virtual void InitializeDefaultAttributes() const;
 	void AddCharacterAbilities();
 
 	UPROPERTY(EditAnywhere, Category = "Weapon")
