@@ -45,14 +45,15 @@ UAttributeMenuWidgetController* UAuraAbilitySystemLibrary::GetAttributeMenuWidge
 void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* WorldContext, ECharacterClass CharacterClass,
 	float Level, UAbilitySystemComponent* ASC)
 {
-	//Need this ref to get ClassDefaultInfo 
-	const AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContext));
-	if (AuraGameMode == nullptr) return;
+	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContext);
+	if (!CharacterClassInfo)
+	{
+		return;
+	}
 
 	AActor* AvatarActor = ASC->GetAvatarActor();
 
 	// Getting access to get GEs
-	UCharacterClassInfo* CharacterClassInfo = AuraGameMode->CharacterClassInfo;
 	const FCharacterClassDefaultInfo ClassDefaultInfo = CharacterClassInfo->GetClassDefaultsInfo(CharacterClass);
 
 	FGameplayEffectContextHandle PrimaryEffectContext = ASC->MakeEffectContext();
@@ -69,4 +70,32 @@ void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 	VitalEffectContext.AddSourceObject(AvatarActor);
 	const FGameplayEffectSpecHandle VitalSpecHandle = ASC->MakeOutgoingSpec(CharacterClassInfo->VitalAttributes, 1.f, VitalEffectContext);
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalSpecHandle.Data.Get());
+}
+
+void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContext, UAbilitySystemComponent* ASC)
+{
+	const UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContext);
+	if (!CharacterClassInfo)
+	{
+		return;
+	}
+	
+	const TArray<TSubclassOf<UGameplayAbility>> CommonAbilities = CharacterClassInfo->CommonAbilities;
+	for (const TSubclassOf<UGameplayAbility> AbilityClass : CommonAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass);
+		ASC->GiveAbility(AbilitySpec);
+	}
+
+}
+
+UCharacterClassInfo* UAuraAbilitySystemLibrary::GetCharacterClassInfo(const UObject* WorldContext)
+{
+	const AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContext));
+	if (!AuraGameMode)
+	{
+		return nullptr;
+	}
+	
+	return AuraGameMode->CharacterClassInfo;
 }

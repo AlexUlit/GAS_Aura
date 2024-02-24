@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "AuraPlayerController.generated.h"
 
+class UDamageTextComponent;
 class USplineComponent;
 class UAuraInputConfig;
 class IEnemyInterface;
@@ -22,6 +23,13 @@ class AURA_API AAuraPlayerController : public APlayerController
 public:
 	AAuraPlayerController();
 	virtual void Tick(float DeltaSeconds) override;
+
+	/*
+	 *If we call it on the server, it'll be executed on the server if the controlling player is local
+	 *But if the controlling player is remote, then this function will be executed remotely on the client.
+	 */
+	UFUNCTION(Client, Reliable)
+	void ShowDamageNumber(float Damage, ACharacter* TargetCharacter);
 	
 protected:
 	virtual void BeginPlay() override;
@@ -75,4 +83,7 @@ private:
 	void AutoRun();
 
 	FHitResult CursorHit;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
 };

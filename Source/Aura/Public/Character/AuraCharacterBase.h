@@ -23,6 +23,10 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const {return AttributeSet;}
 	virtual FVector GetCombatSocketLocation() override;
+	virtual void Die() override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleDeath();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -54,7 +58,21 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartCharacterDissolveTimeLine(UMaterialInstanceDynamic* DissolveMaterial);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartWeaponDissolveTimeLine(UMaterialInstanceDynamic* DissolveMaterial);
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "GAS")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+
+	void Dissolve();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Materials")
+	TObjectPtr<UMaterialInstance> CharacterDissolveMaterial;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Materials")
+	TObjectPtr<UMaterialInstance> WeaponDissolveMaterial;
 };

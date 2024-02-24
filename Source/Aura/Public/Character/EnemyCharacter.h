@@ -20,8 +20,12 @@ public:
 	AEnemyCharacter();
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
-
+	
 	virtual int32 GetPlayerLevel() override;
+
+	virtual void Die() override;
+
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 
 	//Include OverlayWidgetController to get this delegate and not create a new one
 	UPROPERTY(BlueprintAssignable)
@@ -30,6 +34,16 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnMaxHealthChanged;
 
+	void HitReactChanged(const FGameplayTag, int32 NewCount);
+
+	UPROPERTY(VisibleAnywhere, Category = "Combat")
+	float BaseWalkSpeed = 200.f;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Combat")
+	bool bHitReacting = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	float LifeSpan = 5.f;
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo() override;
@@ -45,4 +59,7 @@ protected:
 	TObjectPtr<UWidgetComponent> HealthBar;
 private:
 	void ChangeCustomDepthState(bool bState, USkeletalMeshComponent* TargetMesh);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 };

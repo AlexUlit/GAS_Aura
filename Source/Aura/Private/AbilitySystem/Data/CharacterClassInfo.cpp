@@ -7,3 +7,6 @@ FCharacterClassDefaultInfo UCharacterClassInfo::GetClassDefaultsInfo(ECharacterC
 {
 	return CharacterClassInformation.FindChecked(CharacterClass);
 }
+
+
+
