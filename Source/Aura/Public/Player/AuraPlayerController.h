@@ -29,7 +29,7 @@ public:
 	 *But if the controlling player is remote, then this function will be executed remotely on the client.
 	 */
 	UFUNCTION(Client, Reliable)
-	void ShowDamageNumber(float Damage, ACharacter* TargetCharacter);
+	void ShowDamageNumber(float Damage, ACharacter* TargetCharacter, bool bBlockedHit, bool CriticalHit);
 	
 protected:
 	virtual void BeginPlay() override;

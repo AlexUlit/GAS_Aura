@@ -51,6 +51,19 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Attribute_Secondary_MaxMana = UGameplayTagsManager::Get().
 	AddNativeGameplayTag(FName("Attributes.Secondary.MaxMana"),"Max amount of Mana obtainable");
 
+	//Resistance Attributes
+	GameplayTags.Attribute_Resistance_Arcane = UGameplayTagsManager::Get().
+	AddNativeGameplayTag(FName("Attributes.Resistance.Arcane"),"Arcane damage resistance");
+
+	GameplayTags.Attribute_Resistance_Fire = UGameplayTagsManager::Get().
+	AddNativeGameplayTag(FName("Attributes.Resistance.Fire"),"Fire damage resistance");
+
+	GameplayTags.Attribute_Resistance_Lightning = UGameplayTagsManager::Get().
+	AddNativeGameplayTag(FName("Attributes.Resistance.Lightning"),"Lightning damage resistance");
+
+	GameplayTags.Attribute_Resistance_Physical = UGameplayTagsManager::Get().
+	AddNativeGameplayTag(FName("Attributes.Resistance.Physical"),"Physical damage resistance");
+
 	//Input Tags
 	GameplayTags.InputTag_LBM = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.LBM"), "Input Tag for Left Mouse Button");
 	
@@ -66,5 +79,16 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 
 	//Damage
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), "Damage");
+	GameplayTags.Damage_Arcane = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Arcane"), "Arcane Damage Type");
+	GameplayTags.Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fire"), "Fire Damage Type");
+	GameplayTags.Damage_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Lighting"), "Lighting Damage Type");
+	GameplayTags.Damage_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Physical"), "Physical Damage Type");
+	
+	GameplayTags.DamageTypesToResistance.Add(GameplayTags.Damage_Arcane, GameplayTags.Attribute_Resistance_Arcane);
+	GameplayTags.DamageTypesToResistance.Add(GameplayTags.Damage_Fire, GameplayTags.Attribute_Resistance_Fire);
+	GameplayTags.DamageTypesToResistance.Add(GameplayTags.Damage_Lightning, GameplayTags.Attribute_Resistance_Lightning);
+	GameplayTags.DamageTypesToResistance.Add(GameplayTags.Damage_Physical, GameplayTags.Attribute_Resistance_Physical);
+
+	
 	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effects.HitReact"), "Tag granted when Hit Reacting");
 }

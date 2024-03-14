@@ -52,7 +52,14 @@ void AAuraProjectile::BeginPlay()
 void AAuraProjectile::OnSphereOverlapped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	PlayHitSFX();
+	if (DamageEffectSpecHandle.Data.IsValid() && DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
+	{
+		return;
+	}
+	if (!bHit)
+	{
+		PlayHitSFX();
+	}
 	
 	if (HasAuthority())
 	{
@@ -71,7 +78,12 @@ void AAuraProjectile::OnSphereOverlapped(UPrimitiveComponent* OverlappedComponen
 void AAuraProjectile::PlayHitSFX() const
 {
 	const FVector HitLocation = GetActorLocation();
-	SoundComponent->Stop();
+	
+	if (SoundComponent)
+	{
+		SoundComponent->Stop();
+	}
+	
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, HitLocation);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, HitLocation);
 }
