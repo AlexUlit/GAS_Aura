@@ -9,7 +9,9 @@
 #include "UI/WidgetController/OverlayWidgetController.h"
 #include "EnemyCharacter.generated.h"
 
+class AAuraAIController;
 class UWidgetComponent;
+class UBehaviorTree;
 
 UCLASS()
 class AURA_API AEnemyCharacter : public AAuraCharacterBase, public IEnemyInterface
@@ -18,6 +20,9 @@ class AURA_API AEnemyCharacter : public AAuraCharacterBase, public IEnemyInterfa
 
 public:
 	AEnemyCharacter();
+
+	virtual void PossessedBy(AController* NewController) override;
+	
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
 	
@@ -34,7 +39,7 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnMaxHealthChanged;
 
-	void HitReactChanged(const FGameplayTag, int32 NewCount);
+	void HitReactTagChanged(const FGameplayTag, int32 NewCount);
 
 	UPROPERTY(VisibleAnywhere, Category = "Combat")
 	float BaseWalkSpeed = 200.f;
@@ -57,6 +62,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY()
+	TObjectPtr<AAuraAIController> AuraAIController;
 private:
 	void ChangeCustomDepthState(bool bState, USkeletalMeshComponent* TargetMesh);
 

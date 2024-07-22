@@ -29,15 +29,24 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGam
 	const FActiveGameplayEffectHandle GameplayEffectHandle = TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 
 	const bool bIsInfinite = EffectSpecHandle.Data.Get()->Def->DurationPolicy == EGameplayEffectDurationType::Infinite;
-
+	
 	if (bIsInfinite)
 	{
 		ActiveEffectsHandles.Add(GameplayEffectHandle, GameplayEffectClass);
+	}
+	if (DestroyOnEffectApplication && !bIsInfinite)
+	{
+		Destroy();
 	}
 }
 
 void AAuraEffectActor::OnOverlap(AActor* Target)
 {
+	if (Target->ActorHasTag(FName("Enemy")) && !ApplyEffectsToEnemies)
+	{
+		return;
+	}
+	
 	if (!InstantGameplayEffects.IsEmpty())
 	{
 		for (auto const EffectPars : InstantGameplayEffects)
@@ -74,6 +83,11 @@ void AAuraEffectActor::OnOverlap(AActor* Target)
 
 void AAuraEffectActor::OnEndOverlap(AActor* Target)
 {
+	if (Target->ActorHasTag(FName("Enemy")) && !ApplyEffectsToEnemies)
+	{
+		return;
+	}
+	
 	if (!InstantGameplayEffects.IsEmpty())
 	{
 		for (auto const EffectPars : InstantGameplayEffects)

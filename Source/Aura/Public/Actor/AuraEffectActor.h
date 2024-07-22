@@ -72,6 +72,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AppliedEffects")
 	float EffectLevel = 1.f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "AppliedEffects")
+	bool DestroyOnEffectApplication = false;
 
+	UPROPERTY(EditDefaultsOnly, Category = "AppliedEffects")
+	bool ApplyEffectsToEnemies = false;
+	
 	TMap<FActiveGameplayEffectHandle, TSubclassOf<UGameplayEffect>> ActiveEffectsHandles;
 };

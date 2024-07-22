@@ -10,6 +10,9 @@
 #include "Aura/Aura.h"
 #include "Components/WidgetComponent.h"
 #include "AuraGameplayTags.h"
+#include "AI/AuraAIController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "UI/Widget/AuraUserWidget.h"
 
@@ -25,6 +28,22 @@ AEnemyCharacter::AEnemyCharacter()
 
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
+}
+
+void AEnemyCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (!HasAuthority())
+	{
+		return;
+	}
+	
+	AuraAIController = Cast<AAuraAIController>(NewController);
+	AuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->GetBlackboardAsset());
+	AuraAIController->RunBehaviorTree(BehaviorTree);
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterClass != ECharacterClass::Warrior);
 }
 
 void AEnemyCharacter::HighlightActor()
@@ -86,7 +105,7 @@ void AEnemyCharacter::BeginPlay()
 		});
 		
 		AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTags::Get().Effects_HitReact,  EGameplayTagEventType::NewOrRemoved).AddUObject
-		(this, &AEnemyCharacter::HitReactChanged);
+		(this, &AEnemyCharacter::HitReactTagChanged);
 		
 		//Broadcast initial values 
 		OnHealthChanged.Broadcast(AuraAS->GetHealth());
@@ -96,10 +115,11 @@ void AEnemyCharacter::BeginPlay()
 	
 }
 
-void AEnemyCharacter::HitReactChanged(const FGameplayTag, int32 NewCount)
+void AEnemyCharacter::HitReactTagChanged(const FGameplayTag, int32 NewCount)
 {
 	bHitReacting = NewCount > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
 }
 
 void AEnemyCharacter::InitAbilityActorInfo()
